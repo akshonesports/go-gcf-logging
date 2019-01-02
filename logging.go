@@ -30,12 +30,14 @@ type execution struct {
 }
 
 func WithContext(ctx context.Context) (context.Context, error) {
+	var e execution
+
 	md, err := metadata.FromContext(ctx)
-	if err != nil {
-		return nil, err
+	if err == nil {
+		e.id = md.EventID
 	}
 
-	return context.WithValue(ctx, contextKey{}, &execution{id: md.EventID}), nil
+	return context.WithValue(ctx, contextKey{}, &e), nil
 }
 
 func Wait(ctx context.Context) {
